@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { SendEmailDto } from './dto/send-email.dto';
 import { MailerService } from '@nestjs-modules/mailer';
+import sgMail from '@sendgrid/mail';
 
 @Injectable()
 export class AppService {
@@ -19,11 +20,18 @@ export class AppService {
   }
 
   async sendEmail(to: string, subject: string, text: string) {
-    return this.transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to,
-      subject,
-      text,
+    if (!process.env.SENDGRID_API_KEY) {
+      throw new Error(
+        'SENDGRID_API_KEY is not defined in environment variables',
+      );
+    }
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+    await sgMail.send({
+      to: to,
+      from: process.env.SMTP_USER || 'nhatnlhe186939@fpt.edu.vn',
+      subject: subject,
+      text: text,
     });
   }
 
