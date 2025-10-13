@@ -20,7 +20,7 @@ async function bootstrap() {
     options: {
       urls: [rabbitUrl],
       queue: 'send_email',
-      queueOptions: { durable: true },
+      queueOptions: { durable: false },
     },
   });
 
