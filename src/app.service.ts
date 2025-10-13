@@ -9,10 +9,11 @@ export class AppService {
 
   constructor() {
     this.transporter = nodemailer.createTransport({
-      service: 'gmail', // hoặc SMTP server bạn dùng
+      host: process.env.MAILTRAP_HOST,
+      port: Number(process.env.MAILTRAP_PORT),
       auth: {
-        user: 'nhatnlhe186939@fpt.edu.vn', // email thật
-        pass: 'sxemtvxdnxgrvzuy', // app password
+        user: process.env.MAILTRAP_USER,
+        pass: process.env.MAILTRAP_PASS,
       },
     });
   }
