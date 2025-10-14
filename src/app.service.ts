@@ -1,38 +1,42 @@
-import { Injectable } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
+import { Injectable, Logger } from '@nestjs/common';
 import { SendEmailDto } from './dto/send-email.dto';
 import { MailerService } from '@nestjs-modules/mailer';
-import sgMail from '@sendgrid/mail';
+import * as dotenv from 'dotenv';
+import { Resend } from 'resend';
+
+dotenv.config();
 
 @Injectable()
 export class AppService {
   private transporter;
 
+  private readonly resend: Resend;
+  private readonly logger = new Logger(AppService.name);
+
   constructor() {
-    this.transporter = nodemailer.createTransport({
-      host: process.env.MAILTRAP_HOST,
-      port: Number(process.env.MAILTRAP_PORT),
-      auth: {
-        user: process.env.MAILTRAP_USER,
-        pass: process.env.MAILTRAP_PASS,
-      },
-    });
+    this.resend = new Resend(process.env.RESEND_API_KEY);
   }
 
-  async sendEmail(to: string, subject: string, text: string) {
-    if (!process.env.SENDGRID_API_KEY) {
-      throw new Error(
-        'SENDGRID_API_KEY is not defined in environment variables',
-      );
-    }
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  async sendEmail(to: string, subject: string, html: string) {
+    try {
+      const { data, error } = await this.resend.emails.send({
+        from: 'Cinema App <https://cinema-boking.vercel.app//>', // tên hiển thị
+        to,
+        subject,
+        html,
+      });
 
-    await sgMail.send({
-      to: to,
-      from: process.env.SMTP_USER || 'nhatnlhe186939@fpt.edu.vn',
-      subject: subject,
-      text: text,
-    });
+      if (error) {
+        this.logger.error('❌ Email send failed:', error);
+        return false;
+      }
+
+      this.logger.log(`✅ Email sent successfully: ${data?.id}`);
+      return true;
+    } catch (err) {
+      this.logger.error('❌ Exception while sending email:', err);
+      return false;
+    }
   }
 
   getHello(): string {
