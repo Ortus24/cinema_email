@@ -8,15 +8,16 @@ import * as nodemailer from 'nodemailer';
   imports: [ConfigModule.forRoot({ isGlobal: true })],
   controllers: [AppController],
   providers: [
+    AppService,
     {
       provide: 'BREVO_TRANSPORT',
-      useFactory: async () => {
+      useFactory: () => {
         return nodemailer.createTransport({
           host: 'smtp-relay.brevo.com',
           port: 587,
           auth: {
-            user: 'nhatlckbt007@gmail.com', // ví dụ: nhatlckbt007@gmail.com
-            pass: 'Qn6S9mcyZaJp27AM', // key bạn tạo trong Brevo
+            user: 'nhatlckbt007@gmail.com', // Ví dụ: nhatlckbt007@gmail.com
+            pass: 'Qn6S9mcyZaJp27AM', // Lấy từ Brevo -> SMTP & API -> SMTP Key
           },
         });
       },
