@@ -20,7 +20,7 @@ export class AppService {
   async sendEmail(to: string, subject: string, html: string) {
     try {
       const { data, error } = await this.resend.emails.send({
-        from: 'Cinema App <https://cinema-boking.vercel.app//>', // tên hiển thị
+        from: 'Acme <onboarding@resend.dev>',
         to,
         subject,
         html,
