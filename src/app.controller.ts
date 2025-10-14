@@ -14,13 +14,13 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @MessagePattern('send_email')
+  @MessagePattern('send_email_v1')
   async handleSendEmail(@Payload() data: SendEmailDto) {
     return this.appService.sendEmail(data.to, data.subject, data.text);
   }
 
   @MessagePattern('signup_email')
-  async handleSignupEmail(@Payload() signupEmail: SignupEmailDto) {
-    return this.appService.sginupEmail(signupEmail.email, signupEmail.token);
+  async handleSignupEmail(@Payload() data: string) {
+    return 'call successful!' + data;
   }
 }
