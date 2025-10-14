@@ -1,37 +1,32 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { SendEmailDto } from './dto/send-email.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as dotenv from 'dotenv';
 import { Resend } from 'resend';
+import { Transporter } from 'nodemailer';
 
 dotenv.config();
 
 @Injectable()
 export class AppService {
-  private transporter;
+  // private transporter;
 
   private readonly resend: Resend;
   private readonly logger = new Logger(AppService.name);
 
-  constructor() {
+  constructor(@Inject('BREVO_TRANSPORT') private transporter: Transporter) {
     this.resend = new Resend(process.env.RESEND_API_KEY);
   }
 
   async sendEmail(to: string, subject: string, html: string) {
     try {
-      const { data, error } = await this.resend.emails.send({
-        from: 'Acme <onboarding@resend.dev>',
+      const info = await this.transporter.sendMail({
+        from: 'nhatlckbt007@gmail.com', // hoặc chính email của bạn
         to,
         subject,
         html,
       });
 
-      if (error) {
-        this.logger.error('❌ Email send failed:', error);
-        return false;
-      }
-
-      this.logger.log(`✅ Email sent successfully: ${data?.id}`);
       return true;
     } catch (err) {
       this.logger.error('❌ Exception while sending email:', err);
