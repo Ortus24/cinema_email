@@ -19,7 +19,7 @@ async function bootstrap() {
     transport: Transport.RMQ,
     options: {
       urls: [rabbitUrl],
-      queue: 'send_email',
+      queue: 'email_queue',
       queueOptions: { durable: true },
     },
   });
