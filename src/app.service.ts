@@ -9,10 +9,12 @@ dotenv.config();
 @Injectable()
 export class AppService {
   private transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
       user: 'nhatnlhe186939@fpt.edu.vn',
-      pass: 'sxemtvxdnxgrvzuy',
+      pass: 'tahjapoghwvglfzp',
     },
   });
 
@@ -27,19 +29,20 @@ export class AppService {
 
   async signup(to: string, token: string) {
     const subject = 'Email Verification';
-    const html = `<div style="max-width:600px;margin:30px auto;background:#000dff;padding:30px 40px;border-radius:15px;color:#f5f5f7;font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;box-shadow:0 10px 30px rgba(0,0,0,0.3);">
+    const html = `<div
+     style="max-width:600px;margin:30px auto;background:#000dff;padding:30px 40px;border-radius:15px;color:#f5f5f7;font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;box-shadow:0 10px 30px rgba(0,0,0,0.3);">
                         <h1 style="font-size:2rem;text-align:center;color:#ffea00;text-shadow:2px 2px 8px rgba(0,0,0,0.5);">Welcome!</h1>
                         <p style="text-align:center;font-size:1.1rem;">Please verify your email address to complete the registration process.</p>
                         <div style="text-align:center;margin:30px 0;">
-                          <a href="http://localhost:300/verify-email?token=${token}" style="background:#ffea00;color:#000dff;padding:15px 25px;border-radius:8px;text-decoration:none;font-weight:600;box-shadow:0 5px 15px rgba(255,234,0,0.4);transition:background 0.3s ease;">Verify Email</a>
+                          <a href="http://localhost:3001/signup-verify/${token}" style="background:#ffea00;color:#000dff;padding:15px 25px;border-radius:8px;text-decoration:none;font-weight:600;box-shadow:0 5px 15px rgba(255,234,0,0.4);transition:background 0.3s ease;">Verify Email</a>
                         </div>
                         <p style="text-align:center;color:#ffd700;font-style:italic;font-weight:600;">If you did not create an account, please ignore this email.</p>
                       </div>`;
 
-    console.log('Sending signup email to:', to);
-    console.log('Verification token:', token);
-    console.log('Email subject:', subject);
-    console.log('Email HTML content:', html);
+    // console.log('Sending signup email to:', to);
+    // console.log('Verification token:', token);
+    // console.log('Email subject:', subject);
+    // console.log('Email HTML content:', html);
 
     return this.transporter.sendMail({
       from: 'nhatnlhe186939@fpt.edu.vn',
