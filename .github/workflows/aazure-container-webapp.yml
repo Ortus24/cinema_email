@@ -1,0 +1,69 @@
+name: Build and deploy a container to an Azure Web App
+
+env:
+  AZURE_WEBAPP_NAME: Cinema-Email  # Tên App Service của bạn
+
+on:
+  push:
+    branches: [ "master" ] 
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write # QUAN TRỌNG: Để fix lỗi 'denied' khi push lên GHCR
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
+
+      - name: Log in to GitHub container registry
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Lowercase the repo name and username
+        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
+        with:
+          context: .
+          push: true
+          # Image sẽ có tag là mã hash của commit (ví dụ: ghcr.io/ortus24/cinema_email:a1b2c3d)
+          tags: ghcr.io/${{ env.REPO }}:${{ github.sha }}
+
+  deploy:
+    permissions:
+      contents: none
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Development'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Lowercase the repo name and username
+        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
+      # --- BƯỚC QUAN TRỌNG: Đăng nhập Azure bằng Service Principal ---
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      # ---------------------------------------------------------------
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          # Đã bỏ dòng publish-profile vì ta dùng azure/login ở trên
+          images: 'ghcr.io/${{ env.REPO }}:${{ github.sha }}'
