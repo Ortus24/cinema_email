@@ -34,7 +34,7 @@ export class AppService {
                         <h1 style="font-size:2rem;text-align:center;color:#ffea00;text-shadow:2px 2px 8px rgba(0,0,0,0.5);">Welcome!</h1>
                         <p style="text-align:center;font-size:1.1rem;">Please verify your email address to complete the registration process.</p>
                         <div style="text-align:center;margin:30px 0;">
-                          <a href="https://cinema-booking-l32q.onrender.com/auth/verify?token=${token}" style="background:#ffea00;color:#000dff;padding:15px 25px;border-radius:8px;text-decoration:none;font-weight:600;box-shadow:0 5px 15px rgba(255,234,0,0.4);transition:background 0.3s ease;">Verify Email</a>
+                          <a href="https://cinema-boking.vercel.app/auth/verify?token=${token}" style="background:#ffea00;color:#000dff;padding:15px 25px;border-radius:8px;text-decoration:none;font-weight:600;box-shadow:0 5px 15px rgba(255,234,0,0.4);transition:background 0.3s ease;">Verify Email</a>
                         </div>
                         <p style="text-align:center;color:#ffd700;font-style:italic;font-weight:600;">If you did not create an account, please ignore this email.</p>
                       </div>`;
