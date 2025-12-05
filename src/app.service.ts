@@ -12,6 +12,7 @@ export class AppService {
     host: 'smtp.gmail.com',
     port: 587,
     secure: false,
+    ignoreTLS: false,
     auth: {
       user: 'nhatnlhe186939@fpt.edu.vn',
       pass: 'tahjapoghwvglfzp',
