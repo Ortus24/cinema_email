@@ -19,12 +19,17 @@ export class AppService {
   });
 
   async sendEmail(to: string, subject: string, html: string) {
-    return this.transporter.sendMail({
-      from: 'nhatnlhe186939@fpt.edu.vn',
-      to,
-      subject,
-      html,
-    });
+    try {
+      return this.transporter.sendMail({
+        from: 'nhatnlhe186939@fpt.edu.vn',
+        to,
+        subject,
+        html,
+      });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      throw error;
+    }
   }
 
   async signup(to: string, token: string) {
