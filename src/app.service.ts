@@ -10,12 +10,14 @@ dotenv.config();
 export class AppService {
   private transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false,
     auth: {
       user: 'nhatnlhe186939@fpt.edu.vn',
       pass: 'tahjapoghwvglfzp',
     },
+    logger: true,
+    debug: true,
   });
 
   async sendEmail(to: string, subject: string, html: string) {
@@ -47,7 +49,7 @@ export class AppService {
     // console.log('Sending signup email to:', to);
     // console.log('Verification token:', token);
     // console.log('Email subject:', subject);
-    // console.log('Email HTML content:', html);
+    // console.log('Email HTML content:', html);x`
 
     return this.transporter.sendMail({
       from: 'nhatnlhe186939@fpt.edu.vn',
