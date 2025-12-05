@@ -12,13 +12,15 @@ export class AppService {
     host: 'smtp.gmail.com',
     port: 587,
     secure: false,
-    ignoreTLS: false,
     auth: {
       user: 'nhatnlhe186939@fpt.edu.vn',
       pass: 'tahjapoghwvglfzp',
     },
-    logger: true,
-    debug: true,
+    // FIX LỖI TREO TRÊN RAILWAY:
+    family: 4, // Ép dùng IPv4
+    logger: true, // Log chi tiết
+    debug: true, // Bật debug
+    connectionTimeout: 10000, // Chờ tối đa 10s
   });
 
   async sendEmail(to: string, subject: string, html: string) {
