@@ -4,9 +4,14 @@ import * as nodemailer from 'nodemailer';
 import { DiscoveryModule } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DiscoveryModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    DiscoveryModule,
+    HttpModule,
+  ],
   controllers: [AppController],
   providers: [
     {
